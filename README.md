@@ -20,7 +20,7 @@ For now, a manual installation will have to do.
 
 Git clone this repo, copy org-notebook.el to one of your Emacs load-path, and then `(require 'org-notebook)` in your `.emacs` or `init.el`.
 
-For more information on this process, see: [[https://www.emacswiki.org/emacs/InstallingPackages]]
+For more information on this process, see: https://www.emacswiki.org/emacs/InstallingPackages
 
 ### Getting Started
 
