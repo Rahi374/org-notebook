@@ -1,4 +1,4 @@
-;;; org-notebook.el --- A package to ease the use of org-mode as a notebook  -*- lexical-binding: t; -*-
+;;; org-notebook.el --- Ease the use of org-mode as a notebook  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2016  Paul Elder
 
@@ -37,17 +37,36 @@
 ;;
 ;; org-notebook-drawing-program
 ;; By default this is set to kolourpaint
-;; feel free to change it to whatever you want
+;; This determines what image-drawing program
+;; will be launched when org-notebook-insert-image
+;; is called.
 ;;
 ;; org-notebook-image-type
 ;; By default this is set to png
-;; feel free to change it to whatever you want
-;; although org should be able to display it
+;; This determines the default filetype that
+;; the drawn diagrams will be saved and linked.
 ;;
 ;; org-notebook-language
 ;; By default this is set to en
-;; feel free to change it if you use a different
-;; language for your notebook
+;; This determines the language org header that
+;; will be inserted when org-notebook-new-notebook
+;; is called.
+;;
+;; org-notebook-image-width
+;; By default this is set to 600
+;; This determines the image width org header that
+;; will be inserted when org-notebook-new-notebook
+;; is called. The header determines the width that
+;; the images will be displayed in in org-mode.
+;;
+;; org-notebook-headers
+;; By default this is an empty list
+;; This is a list of cons where the first element
+;; of each con is the header name (eg. LATEX_CLASS,
+;; HTML_HEAD, etc) and the second element of each
+;; con is the value of the header. These will be
+;; inserted into the notebook org file when
+;; org-notebook-new-notebook is called.
 
 ;;; Code:
 
@@ -79,6 +98,18 @@
   :group 'org-notebook
   )
 
+(defcustom org-notebook-image-width 600
+  "Width of images in org"
+  :type 'number
+  :group 'org-notebook
+  )
+
+(defcustom org-notebook-headers '()
+  "List of cons of html headers, latex headers, latex classes, etc"
+  :type 'alist
+  :group 'org-notebook
+  )
+
 (defun org-notebook-new-notebook ()
   "Create a new org-notebook notebook"
   (interactive)
@@ -87,11 +118,16 @@
   (make-directory (concat org-notebook-filepath "/img"))
   (find-file (concat org-notebook-filepath "/notebook.org"))
   (insert (concat
-	    (concat "#+TITLE:     " (read-from-minibuffer "Title: " (first (last (split-string org-notebook-filepath "/")))))
-	    (concat "#+AUTHOR:    " (user-full-name))
-	    (concat "#+EMAIL:     " user-mail-address)
-	    (concat "#+LANGUAGE:  " org-notebook-language)
-	    )
+            (concat "#+TITLE:     " (read-from-minibuffer "Title: " (first (last (split-string org-notebook-filepath "/")))) "\n")
+            (concat "# -*- mode: org; -*-" "\n")
+            (concat "#+AUTHOR:    " (user-full-name) "\n")
+            (concat "#+EMAIL:     " user-mail-address "\n")
+            (concat "#+LANGUAGE:  " org-notebook-language "\n")
+            (concat "#+ATTR_ORG: :width " (number-to-string org-notebook-image-width) "\n")
+            (apply 'concat (loop for i in org-notebook-headers
+                             collect (concat "#+" (car i) ": " (car (cdr i)) "\n")
+                             ))
+            )
     )
   )
 
@@ -113,7 +149,7 @@
 								  (or
 								    (cdr (cdr (directory-files "./img")))
 								    (cons (concat "img0." org-notebook-image-type) '()) )
-								  'dictionary-lessp)
+								  'org-notebook-dictionary-lessp)
 								))
 						       (concat "." org-notebook-image-type))
 						     )
@@ -131,14 +167,14 @@
 ;; The following is code for a custom comparison to allow for natural sorting to extract the guessed next-image name
 ;; Source: http://stackoverflow.com/questions/1942045/natural-order-sort-for-emacs-lisp
 
-(defun dictionary-lessp (str1 str2)
+(defun org-notebook-dictionary-lessp (str1 str2)
   "return t if STR1 is < STR2 when doing a dictionary compare
 (splitting the string at numbers and doing numeric compare with them)"
-  (let ((str1-components (dict-split str1))
-        (str2-components (dict-split str2)))
-    (dict-lessp str1-components str2-components)))
+  (let ((str1-components (org-notebook-dict-split str1))
+        (str2-components (org-notebook-dict-split str2)))
+    (org-notebook-dict-lessp str1-components str2-components)))
 
-(defun dict-lessp (slist1 slist2)
+(defun org-notebook-dict-lessp (slist1 slist2)
   "compare the two lists of strings & numbers"
   (cond ((null slist1)
          (not (null slist2)))
@@ -158,9 +194,9 @@
         (t
          (or (string-lessp (car slist1) (car slist2))
              (and (string-equal (car slist1) (car slist2))
-                  (dict-lessp (cdr slist1) (cdr slist2)))))))
+                  (org-notebook-dict-lessp (cdr slist1) (cdr slist2)))))))
 
-(defun dict-split (str)
+(defun org-notebook-dict-split (str)
   "split a string into a list of number and non-number components"
   (save-match-data 
     (let ((res nil))

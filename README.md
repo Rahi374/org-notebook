@@ -1,10 +1,12 @@
 # org-notebook
 
-A package to ease the use of org-mode as a notebook
+Ease the use of org-mode as a notebook
 
 ### Introduction
 
 I use org-mode to take notes in class. I find it better than all those other note-taking apps like OneNote. The problem is that it was a relatively large hassle to open up an image editor and quickly draw up a diagram an input it into the org file. So I decided to make a series of functions to ease said process, and in the meantime make a package to also manage the notebook.
+
+Recently I have also added functionality to easily add HTML and LaTeX headers as a template to ease the process of exporting the org notebook to HTML or LaTeX/PDF.
 
 ### Requirements
 
@@ -28,15 +30,29 @@ Bind a key combination to `org-notebook-insert-image`.
 
 Then when you're in your org notebook file and you want to quickly draw up a diagram and insert it, run that key combo, and it'll fire up kolourpaint and you can draw your thing, save it in the default directory, and the link will already be put in the org file. (you will need a `img/` directory if you don't already have one)
 
-Or run `org-notebook-new-notebook` from `M-x` to create a new notebook, complete with the org file and the `img/` directory!
+Or run `org-notebook-new-notebook` from `M-x` to create a new notebook, complete with the org file with the template headers and the `img/` directory!
 
 ### Configuration
 
-Customize the variable `org-notebook-drawing-program` to use a different program to draw your diagrams, such as inkscape or gimp.
+  - `org-notebook-drawing-program` to use a different program to draw your diagrams, such as inkscape or gimp. The default value is "kolourpaint".
 
-Customize `org-notebook-image-type` to use a different image type besides png.
+  - `org-notebook-image-type` to use a different image type besides png.
 
-Customize `org-notebook-language` to use a different language for your org notebook.
+  - `org-notebook-language` to use a different language for your org notebook (mainly important for export purposes).
+
+  - `org-notebook-image-width` to change the width (and therefore size) of the images displayed in org mode. The default value is 600.
+
+  - `org-notebook-headers` to set the org headers template. `TITLE`, `AUTHOR`, `mode: org`, `EMAIL`, `LANGUAGE`, and `ATTR_ORG: :width` should not be included here. This is a list of cons. The default value is empty.
+
+Example value of `org-notebbok-headers`:
+```elisp
+(
+  ("LATEX_CLASS_OPTIONS" "[letter,12pt]")
+  ("LATEX_CLASS" "article")
+  ("HTML_HEAD" "<script type=\"text/javascript\" src=\"../media/js/main.js\"></script>")
+  ("HTML_HEAD" "<link rel=\"stylesheet\" type=\"text/css\" href=\"../media/css/main.css\">")
+)
+```
 
 ### Future plans
 
@@ -45,6 +61,7 @@ So far my next idea is to support multiple org files in one notebook.
 ### Changelog
 
 1.0 - Initial version, includes insert-image and new-notebook.
+1.1 - Allows templating with org headers. Also added image-width customiation.
 
 ### Contributors
 
