@@ -60,8 +60,8 @@ So far my next idea is to support multiple org files in one notebook.
 
 ### Changelog
 
-1.0 - Initial version, includes insert-image and new-notebook.
-1.1 - Allows templating with org headers. Also added image-width customiation.
+  - 1.0 - Initial version, includes insert-image and new-notebook.
+  - 1.1 - Allows templating with org headers. Also added image-width customiation.
 
 ### Contributors
 
