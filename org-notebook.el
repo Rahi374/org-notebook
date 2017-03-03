@@ -19,6 +19,8 @@
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+;; Package-Requires: ((emacs "24") (org "8"))
+
 ;;; Commentary:
 
 ;; The main function is org-notebook-insert-image
