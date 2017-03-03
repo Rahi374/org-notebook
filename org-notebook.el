@@ -192,7 +192,7 @@
               (numberp (car slist2)))
          (or (< (car slist1) (car slist2))
              (and (= (car slist1) (car slist2))
-                  (dict-lessp (cdr slist1) (cdr slist2)))))
+                  (org-notebook-dict-lessp (cdr slist1) (cdr slist2)))))
         (t
          (or (string-lessp (car slist1) (car slist2))
              (and (string-equal (car slist1) (car slist2))
