@@ -16,9 +16,9 @@ Also org and ido.
 
 ### Installation
 
-I'm hoping to get this onto MELPA.
+I am now waiting for my recipe to be accepted into MELPA.
 
-For now, a manual installation will have to do.
+For now, a manual installation will have to do:
 
 Git clone this repo, copy org-notebook.el to one of your Emacs load-path, and then `(require 'org-notebook)` in your `.emacs` or `init.el`.
 
@@ -34,7 +34,7 @@ Or run `org-notebook-new-notebook` from `M-x` to create a new notebook, complete
 
 ### Configuration
 
-  - `org-notebook-drawing-program` to use a different program to draw your diagrams, such as inkscape or gimp. The default value is "kolourpaint".
+  - `org-notebook-drawing-program` to use a different program to draw your diagrams, such as inkscape or gimp. The default value is "kolourpaint". Tip: If you want to just insert an image link and create the image later, you can set this value to an empty string and it won't load any drawing program.
 
   - `org-notebook-image-type` to use a different image type besides png.
 
@@ -56,7 +56,8 @@ Example value of `org-notebbok-headers`:
 
 ### Future plans
 
-So far my next idea is to support multiple org files in one notebook.
+- Support multiple org files (=pages) in one notebook.
+- Allow per-subdirectory auto-customization of variables (drawing program, headers, language, and image type)
 
 ### Changelog
 
