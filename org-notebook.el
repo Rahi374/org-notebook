@@ -5,6 +5,7 @@
 ;; Author: Paul Elder <paul.elder@amanokami.net>
 ;; Keywords: convenience, tools
 ;; Version: 1.0
+;; Package-Requires: ((emacs "24") (org "8") (cl-lib "0.5"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -18,8 +19,6 @@
 
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;; Package-Requires: ((emacs "24") (org "8"))
 
 ;;; Commentary:
 
@@ -74,6 +73,7 @@
 
 (require 'org)
 (require 'ido)
+(require 'cl-lib)
 
 (defgroup org-notebook nil
   "Ease the use of org-mode as a notebook"
@@ -115,56 +115,56 @@
 (defun org-notebook-new-notebook ()
   "Create a new org-notebook notebook"
   (interactive)
-  (setq org-notebook-filepath (ido-read-file-name "Notebook name: " default-directory))
-  (make-directory org-notebook-filepath)
-  (make-directory (concat org-notebook-filepath "/img"))
-  (find-file (concat org-notebook-filepath "/notebook.org"))
-  (insert (concat
-            (concat "#+TITLE:     " (read-from-minibuffer "Title: " (first (last (split-string org-notebook-filepath "/")))) "\n")
-            (concat "# -*- mode: org; -*-" "\n")
-            (concat "#+AUTHOR:    " (user-full-name) "\n")
-            (concat "#+EMAIL:     " user-mail-address "\n")
-            (concat "#+LANGUAGE:  " org-notebook-language "\n")
-            (concat "#+ATTR_ORG: :width " (number-to-string org-notebook-image-width) "\n")
-            (apply 'concat (loop for i in org-notebook-headers
-                             collect (concat "#+" (car i) ": " (car (cdr i)) "\n")
-                             ))
-            )
-    )
-  )
+  (let ((org-notebook-filepath (ido-read-file-name "Notebook name: " default-directory)))
+    (make-directory org-notebook-filepath)
+    (make-directory (concat org-notebook-filepath "/img"))
+    (find-file (concat org-notebook-filepath "/notebook.org"))
+    (insert (concat
+	     (concat "#+TITLE:     " (read-from-minibuffer "Title: " (cl-first (last (split-string org-notebook-filepath "/")))) "\n")
+	     (concat "# -*- mode: org; -*-" "\n")
+	     (concat "#+AUTHOR:    " (user-full-name) "\n")
+	     (concat "#+EMAIL:     " user-mail-address "\n")
+	     (concat "#+LANGUAGE:  " org-notebook-language "\n")
+	     (concat "#+ATTR_ORG: :width " (number-to-string org-notebook-image-width) "\n")
+	     (apply 'concat (cl-loop for i in org-notebook-headers
+				     collect (concat "#+" (car i) ": " (car (cdr i)) "\n")
+				     ))
+	     )
+	    )
+  ))
 
 (defun org-notebook-insert-image ()
   "Insert an image with auto-completion for the next image name and open the drawing program"
   (interactive)
-  (setq org-notebook-image-filepath
-    (concat
-      "./img/"
-      (read-from-minibuffer "Filename: " (concat "img"
-					   (number-to-string
-					     (+
-					       (string-to-number
-						 (substring
-						   (first
-						     (split-string
-						       (first (last
-								(sort
-								  (or
-								    (cdr (cdr (directory-files "./img")))
-								    (cons (concat "img0." org-notebook-image-type) '()) )
-								  'org-notebook-dictionary-lessp)
-								))
-						       (concat "." org-notebook-image-type))
+  (let ((org-notebook-image-filepath
+	 (concat
+	  "./img/"
+	  (read-from-minibuffer "Filename: " (concat "img"
+						     (number-to-string
+						      (+
+						       (string-to-number
+							(substring
+							 (cl-first
+							  (split-string
+							   (cl-first (last
+								      (sort
+								       (or
+									(cdr (cdr (directory-files "./img")))
+									(cons (concat "img0." org-notebook-image-type) '()) )
+								       'org-notebook-dictionary-lessp)
+								      ))
+							   (concat "." org-notebook-image-type))
+							  )
+							 3)
+							)
+						       1)
+						      )
+						     ".png"
 						     )
-						   3)
-						 )
-					       1)
-					     )
-					   ".png"
-					   )
-	)))
-  (insert (concat "[[" org-notebook-image-filepath "]]"))
-  (start-process "org-notebook-drawing" nil org-notebook-drawing-program org-notebook-image-filepath)
-  )
+				))))
+    (insert (concat "[[" org-notebook-image-filepath "]]"))
+    (start-process "org-notebook-drawing" nil org-notebook-drawing-program org-notebook-image-filepath)
+  ))
 
 ;; The following is code for a custom comparison to allow for natural sorting to extract the guessed next-image name
 ;; Source: http://stackoverflow.com/questions/1942045/natural-order-sort-for-emacs-lisp
