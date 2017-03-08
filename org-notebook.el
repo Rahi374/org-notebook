@@ -112,6 +112,7 @@
   :group 'org-notebook
   )
 
+;;;###autoload
 (defun org-notebook-new-notebook ()
   "Create a new org-notebook notebook"
   (interactive)
@@ -133,6 +134,7 @@
 	    )
   ))
 
+;;;###autoload
 (defun org-notebook-insert-image ()
   "Insert an image with auto-completion for the next image name and open the drawing program"
   (interactive)
