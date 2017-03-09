@@ -82,7 +82,11 @@
   :link '(emacs-library-link :tag "Lisp File" "org-notebook.el")
   )
 
-(defcustom org-notebook-drawing-program "kolourpaint"
+(defcustom org-notebook-drawing-program (cond
+                                         ((executable-find "kolourpaint") "kolourpaint")
+                                         ((executable-find "mypaint") "mypaint")
+                                         ((executable-find "krita") "krita")
+                                         ((executable-find "gimp") "gimp"))
   "Drawing program to be used"
   :type 'string
   :group 'org-notebook
