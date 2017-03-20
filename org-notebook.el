@@ -127,9 +127,8 @@
             "#+EMAIL:     " user-mail-address "\n"
             "#+LANGUAGE:  " org-notebook-language "\n"
             "#+ATTR_ORG: :width " (number-to-string org-notebook-image-width) "\n"
-            (apply 'concat
-                   (cl-loop for i in org-notebook-headers
-                            collect (concat "#+" (car i) ": " (car (cdr i)) "\n"))))))
+            (cl-loop for (name value) in org-notebook-headers
+                     concat (format "#+%s: %s\n" name value)))))
 
 ;;;###autoload
 (defun org-notebook-insert-image ()
