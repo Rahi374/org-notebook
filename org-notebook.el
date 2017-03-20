@@ -118,19 +118,18 @@
     (make-directory org-notebook-filepath)
     (make-directory (concat org-notebook-filepath "/img"))
     (find-file (concat org-notebook-filepath "/notebook.org"))
-    (insert (concat
-	     (concat "#+TITLE:     "
-                     (read-from-minibuffer
-                      "Title: " (cl-first (last (split-string org-notebook-filepath "/"))))
-                     "\n")
-	     (concat "# -*- mode: org; -*-" "\n")
-	     (concat "#+AUTHOR:    " (user-full-name) "\n")
-	     (concat "#+EMAIL:     " user-mail-address "\n")
-	     (concat "#+LANGUAGE:  " org-notebook-language "\n")
-	     (concat "#+ATTR_ORG: :width " (number-to-string org-notebook-image-width) "\n")
-	     (apply 'concat
-                    (cl-loop for i in org-notebook-headers
-                             collect (concat "#+" (car i) ": " (car (cdr i)) "\n")))))))
+    (insert "#+TITLE:     "
+            (read-from-minibuffer
+             "Title: " (car (last (split-string org-notebook-filepath "/"))))
+            "\n"
+            "# -*- mode: org; -*-" "\n"
+            "#+AUTHOR:    " (user-full-name) "\n"
+            "#+EMAIL:     " user-mail-address "\n"
+            "#+LANGUAGE:  " org-notebook-language "\n"
+            "#+ATTR_ORG: :width " (number-to-string org-notebook-image-width) "\n"
+            (apply 'concat
+                   (cl-loop for i in org-notebook-headers
+                            collect (concat "#+" (car i) ": " (car (cdr i)) "\n"))))))
 
 ;;;###autoload
 (defun org-notebook-insert-image ()
