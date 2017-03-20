@@ -141,23 +141,21 @@
 	  "./img/"
 	  (read-from-minibuffer
            "Filename: "
-           (concat "img"
-                   (number-to-string
-                    (+
-                     (string-to-number
-                      (substring
-                       (cl-first
-                        (split-string
-                         (cl-first (last
-                                    (sort
-                                     (or
-                                      (cdr (cdr (directory-files "./img")))
-                                      (list (concat "img0." org-notebook-image-type)))
-                                     'org-notebook-dictionary-lessp)))
-                         (concat "." org-notebook-image-type)))
-                       3))
-                     1)) ".png")))))
-    (insert (concat "[[" org-notebook-image-filepath "]]"))
+           (format "img%d.png"
+                   (+ (string-to-number
+                       (substring
+                        (car
+                         (split-string
+                          (car (last
+                                (sort
+                                 (or
+                                  (cddr (directory-files "./img"))
+                                  (list (concat "img0." org-notebook-image-type)))
+                                 'org-notebook-dictionary-lessp)))
+                          (concat "." org-notebook-image-type)))
+                        3))
+                      1))))))
+    (insert "[[" org-notebook-image-filepath "]]")
     (start-process "org-notebook-drawing" nil org-notebook-drawing-program
                    org-notebook-image-filepath)))
 
