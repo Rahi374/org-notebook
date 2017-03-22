@@ -79,8 +79,7 @@
   "Ease the use of org-mode as a notebook"
   :group 'convenience
   :group 'tools
-  :link '(emacs-library-link :tag "Lisp File" "org-notebook.el")
-  )
+  :link '(emacs-library-link :tag "Lisp File" "org-notebook.el"))
 
 (defcustom org-notebook-drawing-program (cond
                                          ((executable-find "kolourpaint") "kolourpaint")
@@ -89,32 +88,27 @@
                                          ((executable-find "gimp") "gimp"))
   "Drawing program to be used"
   :type 'string
-  :group 'org-notebook
-  )
+  :group 'org-notebook)
 
 (defcustom org-notebook-image-type "png"
   "Image type to be used"
   :type 'string
-  :group 'org-notebook
-  )
+  :group 'org-notebook)
 
 (defcustom org-notebook-language "en"
   "Language that the notebook will be in, mostly just for the org header"
   :type 'string
-  :group 'org-notebook
-  )
+  :group 'org-notebook)
 
 (defcustom org-notebook-image-width 600
   "Width of images in org"
   :type 'number
-  :group 'org-notebook
-  )
+  :group 'org-notebook)
 
 (defcustom org-notebook-headers '()
   "List of cons of html headers, latex headers, latex classes, etc"
   :type 'alist
-  :group 'org-notebook
-  )
+  :group 'org-notebook)
 
 ;;;###autoload
 (defun org-notebook-new-notebook ()
@@ -124,19 +118,17 @@
     (make-directory org-notebook-filepath)
     (make-directory (concat org-notebook-filepath "/img"))
     (find-file (concat org-notebook-filepath "/notebook.org"))
-    (insert (concat
-	     (concat "#+TITLE:     " (read-from-minibuffer "Title: " (cl-first (last (split-string org-notebook-filepath "/")))) "\n")
-	     (concat "# -*- mode: org; -*-" "\n")
-	     (concat "#+AUTHOR:    " (user-full-name) "\n")
-	     (concat "#+EMAIL:     " user-mail-address "\n")
-	     (concat "#+LANGUAGE:  " org-notebook-language "\n")
-	     (concat "#+ATTR_ORG: :width " (number-to-string org-notebook-image-width) "\n")
-	     (apply 'concat (cl-loop for i in org-notebook-headers
-				     collect (concat "#+" (car i) ": " (car (cdr i)) "\n")
-				     ))
-	     )
-	    )
-  ))
+    (insert "#+TITLE:     "
+            (read-from-minibuffer
+             "Title: " (car (last (split-string org-notebook-filepath "/"))))
+            "\n"
+            "# -*- mode: org; -*-" "\n"
+            "#+AUTHOR:    " (user-full-name) "\n"
+            "#+EMAIL:     " user-mail-address "\n"
+            "#+LANGUAGE:  " org-notebook-language "\n"
+            "#+ATTR_ORG: :width " (number-to-string org-notebook-image-width) "\n"
+            (cl-loop for (name value) in org-notebook-headers
+                     concat (format "#+%s: %s\n" name value)))))
 
 ;;;###autoload
 (defun org-notebook-insert-image ()
@@ -145,32 +137,25 @@
   (let ((org-notebook-image-filepath
 	 (concat
 	  "./img/"
-	  (read-from-minibuffer "Filename: " (concat "img"
-						     (number-to-string
-						      (+
-						       (string-to-number
-							(substring
-							 (cl-first
-							  (split-string
-							   (cl-first (last
-								      (sort
-								       (or
-									(cdr (cdr (directory-files "./img")))
-									(cons (concat "img0." org-notebook-image-type) '()) )
-								       'org-notebook-dictionary-lessp)
-								      ))
-							   (concat "." org-notebook-image-type))
-							  )
-							 3)
-							)
-						       1)
-						      )
-						     ".png"
-						     )
-				))))
-    (insert (concat "[[" org-notebook-image-filepath "]]"))
-    (start-process "org-notebook-drawing" nil org-notebook-drawing-program org-notebook-image-filepath)
-  ))
+	  (read-from-minibuffer
+           "Filename: "
+           (format "img%d.png"
+                   (+ (string-to-number
+                       (substring
+                        (car
+                         (split-string
+                          (car (last
+                                (sort
+                                 (or
+                                  (cddr (directory-files "./img"))
+                                  (list (concat "img0." org-notebook-image-type)))
+                                 'org-notebook-dictionary-lessp)))
+                          (concat "." org-notebook-image-type)))
+                        3))
+                      1))))))
+    (insert "[[" org-notebook-image-filepath "]]")
+    (start-process "org-notebook-drawing" nil org-notebook-drawing-program
+                   org-notebook-image-filepath)))
 
 ;; The following is code for a custom comparison to allow for natural sorting to extract the guessed next-image name
 ;; Source: http://stackoverflow.com/questions/1942045/natural-order-sort-for-emacs-lisp
@@ -206,7 +191,7 @@
 
 (defun org-notebook-dict-split (str)
   "split a string into a list of number and non-number components"
-  (save-match-data 
+  (save-match-data
     (let ((res nil))
       (while (and str (not (string-equal "" str)))
         (let ((p (string-match "[0-9]*\\.?[0-9]+" str)))
