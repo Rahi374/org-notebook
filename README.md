@@ -16,13 +16,9 @@ Also org and ido.
 
 ### Installation
 
-I am now waiting for my recipe to be accepted into MELPA.
+Install from MELPA.
 
-For now, a manual installation will have to do:
-
-Git clone this repo, copy org-notebook.el to one of your Emacs load-path, and then `(require 'org-notebook)` in your `.emacs` or `init.el`.
-
-For more information on this process, see: https://www.emacswiki.org/emacs/InstallingPackages
+`M-x package-install RET org-notebook`
 
 ### Getting Started
 
@@ -62,7 +58,8 @@ Example value of `org-notebbok-headers`:
 ### Changelog
 
   - 1.0 - Initial version, includes insert-image and new-notebook.
-  - 1.1 - Allows templating with org headers. Also added image-width customiation.
+  - 1.1 - Allows templating with org headers. Also added image-width customization.
+  - 1.2 - Smart-decide paint program and autocreate img/ directory on insert-image.
 
 ### Contributors
 

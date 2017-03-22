@@ -134,6 +134,7 @@
 (defun org-notebook-insert-image ()
   "Insert an image with auto-completion for the next image name and open the drawing program"
   (interactive)
+  (unless (file-directory-p "./img") (make-directory "./img"))
   (let ((org-notebook-image-filepath
 	 (concat
 	  "./img/"
