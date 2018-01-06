@@ -50,10 +50,12 @@ Example value of `org-notebbok-headers`:
 )
 ```
 
-### Future plans
+### TODO
 
 - Support multiple org files (=pages) in one notebook.
 - Allow per-subdirectory auto-customization of variables (drawing program, headers, language, and image type)
+- Check svg compatability
+- Make readme uniform in elisp file and markdown
 
 ### Changelog
 
