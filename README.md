@@ -1,3 +1,5 @@
+[![MELPA](http://melpa.org/packages/org-notebook-badge.svg)](http://melpa.org/#/org-notebook)
+
 # org-notebook
 
 Ease the use of org-mode as a notebook
